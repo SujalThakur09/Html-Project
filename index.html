@@ -1,0 +1,658 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LPU RENTALS</title>
+</head>
+
+<body style="margin:0; background:#0b1013; color:white; font-family:Arial;">
+
+<div id="loginPage" style="display:flex; justify-content:center; align-items:center; height:100vh;">
+
+    <div style="background:#1b252b; padding:40px; width:320px; border-radius:12px; text-align:center;">
+
+        <h1><span style="background:#f7c62f; color:black; padding:5px;">LPU</span> RENTALS</h1>
+        <h2>Welcome Back</h2>
+        <p style="color:#aaa;">Login to continue</p>
+
+        <input id="loginEmail" type="email" placeholder="Enter Email ID"
+        style="padding:13px; width:90%; margin:10px 0; background:#0b1013; color:white; border:1px solid #444; border-radius:5px;">
+
+        <input id="loginPassword" type="password" placeholder="Enter Password"
+        style="padding:13px; width:90%; margin:10px 0; background:#0b1013; color:white; border:1px solid #444; border-radius:5px;">
+
+        <button onclick="login()" class="normalBtn" style="width:100%; margin-top:15px;">
+            Login
+        </button>
+
+        <p style="color:#888; font-size:12px;">LPU RENTALS | Vehicle Rental Platform</p>
+
+    </div>
+</div>
+
+
+<div id="mainPage" style="display:none;">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#12191e; flex-wrap:wrap;">
+
+        <h2 style="margin:0;">
+            <span style="background:#f7c62f; color:black; padding:3px 8px; border-radius:5px;">LPU</span>
+            RENTALS
+        </h2>
+
+        <div>
+            <a href="#" onclick="showBrowse()" style="color:#aaa; margin:10px; text-decoration:none;">Browse</a>
+            <a href="#" onclick="showBookings()" style="color:#aaa; margin:10px; text-decoration:none;">My Bookings</a>
+            <button onclick="logout()" class="normalBtn">Logout</button>
+        </div>
+
+    </div>
+
+
+    <div id="browsePage">
+
+        <div style="padding:55px 25px;">
+
+            <h1 style="font-size:55px; margin:0 0 20px;">
+                Renting A Vehicle Near LPU.<br>
+                Never Easier Before.
+            </h1>
+
+            <p style="color:#aaa; font-size:18px;">
+                Cars, SUVs, Bikes and Scooters from local owners<br>
+                At the lowest possible price.
+            </p>
+
+        </div>
+
+
+        <div style="background:#12191e; padding:30px 20px;">
+
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:15px;">
+
+                <div>
+                    <button onclick="filterVehicles('All')" class="filterBtn">All</button>
+                    <button onclick="filterVehicles('Car')" class="filterBtn">Car</button>
+                    <button onclick="filterVehicles('SUV')" class="filterBtn">SUV</button>
+                    <button onclick="filterVehicles('Van')" class="filterBtn">Van</button>
+                    <button onclick="filterVehicles('Bike')" class="filterBtn">Bike</button>
+                    <button onclick="filterVehicles('Scooter')" class="filterBtn">Scooter</button>
+                </div>
+
+                <select id="sortPrice" onchange="sortVehicles()"
+                style="padding:10px; background:#1b252b; color:white;">
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                </select>
+
+            </div>
+
+            <div id="vehicleList" style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:25px;">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="detailsPage" style="display:none; padding:35px 5%;">
+
+        <button onclick="showBrowse()" class="normalBtn">← Back to Browse</button>
+
+        <div id="vehicleDetails" style="margin-top:30px;"></div>
+
+    </div>
+
+
+    <div id="bookingsPage" style="display:none; padding:35px 20px;">
+
+        <h1>My Bookings</h1>
+        <p style="color:#aaa;">Your reserved vehicles appear here.</p>
+
+        <div id="bookingList" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:25px;">
+
+        </div>
+
+        <button onclick="showBrowse()" class="normalBtn" style="margin-top:25px;">
+            Browse More Vehicles
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="bookingWindow" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000c; justify-content:center; align-items:center;">
+
+    <div style="background:#1b252b; padding:30px; width:300px; border-radius:10px; text-align:center;">
+
+        <h2>Complete Your Booking</h2>
+        <h3 id="selectedVehicle"></h3>
+        <p id="selectedPrice" style="color:#f7c62f;"></p>
+
+        <input id="customerName" type="text" placeholder="Your Name"
+        style="padding:12px; width:90%; margin:10px 0; background:#0b1013; color:white; border:1px solid #444;">
+
+        <input id="customerMobile" type="tel" placeholder="Mobile Number" maxlength="10"
+        style="padding:12px; width:90%; margin:10px 0; background:#0b1013; color:white; border:1px solid #444;">
+
+        <button onclick="confirmBooking()" class="normalBtn" style="width:100%; margin-top:10px;">
+            Confirm Booking
+        </button>
+
+        <button onclick="closeBooking()" style="padding:10px; width:100%; background:#333; color:white; border:0; margin-top:10px; cursor:pointer;">
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="successWindow" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000c; justify-content:center; align-items:center;">
+
+    <div style="background:#1b252b; padding:35px; width:300px; text-align:center; border-radius:10px;">
+
+        <h1 style="color:#f7c62f;">✓</h1>
+        <h2>Booking Successful!</h2>
+        <p id="successMessage" style="color:#aaa;"></p>
+
+        <button onclick="finishBooking()" class="normalBtn">
+            Continue
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let vehicles = [
+
+    {
+        name:"Honda Activa",
+        price:400,
+        type:"Scooter",
+        image:"https://imgs.search.brave.com/w_y42uFNsQhWAIXQvQkcrknbRSZ-jBRfHtXRd43hyvU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/Y2FyYW5kYmlrZS5j/b20vX25leHQvaW1h/Z2U_dXJsPWh0dHBz/Oi8vaW1hZ2VzLmNh/cmFuZGJpa2UuY29t/L2Jpa2UtaW1hZ2Vz/L2NvbG9ycy9ob25k/YS9hY3RpdmEtaS9o/b25kYS1hY3RpdmEt/aS1vcmNoaWQtcHVy/cGxlLW1ldGFsbGlj/LnBuZz92PTEmdz0x/OTIwJnE9OTA",
+        engine:"110cc",
+        mileage:"45-50 km/l",
+        fuel:"Petrol",
+        transmission:"Automatic (CVT)",
+        seats:"2",
+        description:"Honda Activa is a comfortable and reliable scooter, perfect for everyday travel around LPU and nearby areas."
+    },
+
+    {
+        name:"Hero Splendor Plus",
+        price:500,
+        type:"Bike",
+        image:"https://imgs.search.brave.com/i1Ska9AKobrvRk4gaP_auiUZgLjvVt_6iG1w_5s-QUE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bmljZXBuZy5jb20v/cG5nL2Z1bGwvMjUz/LTI1Mzg0MDRfZ2V0/LXRoaXMtYmlrZS1o/ZXJvLXNwbGVuZG9y/LXBsdXMtaTNzLnBu/Zw",
+        engine:"97.2cc",
+        mileage:"60-70 km/l",
+        fuel:"Petrol",
+        transmission:"Manual",
+        seats:"2",
+        description:"Hero Splendor Plus is known for its excellent mileage, low maintenance and comfortable daily commuting."
+    },
+
+    {
+        name:"Royal Enfield Classic 350",
+        price:1000,
+        type:"Bike",
+        image:"https://imgs.search.brave.com/I9SBcZoYB6_ov93MyQKwRq3FGIJlr1WlnKXoe2yN7Xc/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly80Lmlt/aW1nLmNvbS9kYXRh/NC9KSS9FVy9NWS0y/MTkxMDYxNS9yb3lh/bC1lbmZpZWxkLWNs/YXNzaWMtMzUwLTEw/MDB4MTAwMC5wbmc",
+        engine:"349cc",
+        mileage:"35-40 km/l",
+        fuel:"Petrol",
+        transmission:"5-Speed Manual",
+        seats:"2",
+        description:"Royal Enfield Classic 350 offers a powerful riding experience with its iconic design and comfortable seating."
+    },
+
+    {
+        name:"Maruti Swift",
+        price:1500,
+        type:"Car",
+        image:"https://imgs.search.brave.com/ShW4IPQYu9QR7hMXe2plcxiHSHCyifViF_tVK8xqa2c/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/cG5na2V5LmNvbS9w/bmcvZnVsbC85MjMt/OTIzMDYyN19tYXJ1/dGktc3dpZnQtc3V6/dWtpLXN3aWZ0LXN6/My0yMDE4LnBuZw",
+        imageWidth:"90%",
+        engine:"1197cc",
+        mileage:"24 km/l (claimed)",
+        fuel:"Petrol",
+        transmission:"Manual",
+        seats:"5",
+        description:"Maruti Swift is a stylish and practical hatchback suitable for city travel and short road trips."
+    },
+
+    {
+        name:"Hyundai Creta",
+        price:2500,
+        type:"SUV",
+        image:"https://imgs.search.brave.com/mvWUAZyL6igNhmliRw7d7_-mLcAQiXIIknRRTvuaOew/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bmljZXBuZy5jb20v/cG5nL2Z1bGwvMjUz/LTI1MzQxNTlfYS1j/LWh5dW5kYWktY3Jl/dGEtY2FyLXNsZWVr/LXNpbHZlci1oeXVu/ZGFpLnBuZw",
+        engine:"1497cc",
+        mileage:"17-18 km/l (approx.)",
+        fuel:"Petrol",
+        transmission:"Manual",
+        seats:"5",
+        description:"Hyundai Creta provides a spacious cabin, comfortable ride and premium features for longer journeys."
+    },
+
+    {
+        name:"Mahindra XUV 7XO",
+        price:3000,
+        type:"SUV",
+        image:"https://imgs.search.brave.com/0vLKxCor1jOnkC0V_WpO0JlCGSwcQFUBGG6YlbyxZYw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMtY2RuLmNhcnMy/NC5jb20vcHJvZC92/ZWhpY2xlcy9tYWhp/bmRyYS94dXYtN3hv/L2Nhci1pbWFnZS0x/MDAweDY1MC1hS2hT/Wnc5TURzeWd3UEpZ/LnBuZz93PTE0NiZk/cHI9MyZvcHRpbWl6ZT1sb3cmZm9ybWF0PWF1dG8mcXVhbGl0eT01MA",
+        engine:"2.0L Turbo Petrol",
+        mileage:"Varies by variant",
+        fuel:"Petrol",
+        transmission:"Manual / Automatic",
+        seats:"6-7",
+        description:"A premium SUV option offering spacious seating, modern technology and a comfortable driving experience."
+    },
+
+    {
+        name:"Maruti Omni",
+        price:1000,
+        type:"Van",
+        image:"https://imgs.search.brave.com/Xu6sazy-1fV2snIJujjA5Ftzak5c88HqiGicUfDPziw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMTUvVmFu/LVBORy1QaWN0dXJl/LnBuZw",
+        engine:"796cc",
+        mileage:"14-16 km/l",
+        fuel:"Petrol",
+        transmission:"Manual",
+        seats:"5-8",
+        description:"Maruti Omni is a practical multi-purpose van suitable for group transportation and carrying luggage."
+    },
+
+    {
+        name:"Hyundai i20 N-Line",
+        price:1800,
+        type:"Car",
+        image:"https://imgs.search.brave.com/VO4K5zind5o2iEm10NgvNJUCpHbCTeG7OHb0fxIpoC4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90cmlk/ZW50LWdyb3VwLnMz/LmFwLXNvdXRoLTEu/YW1hem9uYXdzLmNv/bS9oeXVuZGFpL21v/ZGVscy9jb2xvcnMv/MTY5ODQyNzM1NS5w/bmc",
+        engine:"998cc Turbo Petrol",
+        mileage:"20 km/l (claimed)",
+        fuel:"Petrol",
+        transmission:"Manual / DCT",
+        seats:"5",
+        description:"Hyundai i20 N-Line combines sporty styling, modern features and an engaging driving experience."
+    }
+
+];
+
+
+let selectedVehicle = "";
+let selectedPrice = 0;
+let currentFilter = "All";
+
+
+function login() {
+
+    let email = document.getElementById("loginEmail").value.trim();
+    let password = document.getElementById("loginPassword").value;
+
+    if(email === "" || password === "") {
+        alert("Please enter your email and password.");
+        return;
+    }
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    localStorage.setItem("userEmail", email);
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+
+    displayVehicles();
+
+}
+
+
+function logout() {
+
+    localStorage.removeItem("userEmail");
+
+    document.getElementById("mainPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "flex";
+
+}
+
+
+function displayVehicles() {
+
+    let list = document.getElementById("vehicleList");
+
+    list.innerHTML = "";
+
+    let filtered = vehicles.filter(function(vehicle) {
+        return currentFilter === "All" || vehicle.type === currentFilter;
+    });
+
+    filtered.forEach(function(vehicle) {
+
+        let index = vehicles.indexOf(vehicle);
+
+        list.innerHTML += `
+
+        <div onclick="openDetails(${index})"
+        style="background:#1b252b; border-radius:8px; overflow:hidden; cursor:pointer;">
+
+            <div style="height:160px; display:flex; justify-content:center; align-items:center; background:#243139; overflow:hidden;">
+
+                <img src="${vehicle.image}" width="${vehicle.imageWidth || '100%'}" height="160" style="object-fit:contain;">
+
+            </div>
+
+            <div style="padding:15px 20px;">
+
+                <h2>${vehicle.name}</h2>
+
+                <p style="color:#f7c62f; font-size:18px;">
+                    ₹${vehicle.price} / day
+                </p>
+
+                <p style="color:#aaa;">${vehicle.type}</p>
+
+                <button class="normalBtn">
+                    View Details →
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+function filterVehicles(type) {
+    currentFilter = type;
+    displayVehicles();
+}
+
+
+function sortVehicles() {
+
+    let order = document.getElementById("sortPrice").value;
+
+    if(order === "low") {
+        vehicles.sort(function(a,b) {
+            return a.price - b.price;
+        });
+    }
+
+    else {
+        vehicles.sort(function(a,b) {
+            return b.price - a.price;
+        });
+    }
+
+    displayVehicles();
+
+}
+
+
+function openDetails(index) {
+
+    let vehicle = vehicles[index];
+
+    document.getElementById("browsePage").style.display = "none";
+    document.getElementById("bookingsPage").style.display = "none";
+    document.getElementById("detailsPage").style.display = "block";
+
+    document.getElementById("vehicleDetails").innerHTML = `
+
+        <div style="background:#1b252b; padding:30px; border-radius:12px;">
+
+            <div style="background:#243139; height:250px; display:flex; justify-content:center; align-items:center; border-radius:10px; overflow:hidden;">
+
+                <img src="${vehicle.image}" width="100%" height="250" style="object-fit:contain;">
+
+            </div>
+
+            <h1 style="font-size:38px;">${vehicle.name}</h1>
+
+            <p style="color:#aaa;">${vehicle.type} | Available for rent near LPU</p>
+
+            <h2 style="color:#f7c62f;">₹${vehicle.price} / day</h2>
+
+            <p style="color:#ccc; font-size:17px; line-height:1.6;">
+                ${vehicle.description}
+            </p>
+
+            <h2>Vehicle Specifications</h2>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:15px;">
+
+                <div class="specBox">
+                    <p style="color:#aaa;">Engine</p>
+                    <h3>${vehicle.engine}</h3>
+                </div>
+
+                <div class="specBox">
+                    <p style="color:#aaa;">Mileage</p>
+                    <h3>${vehicle.mileage}</h3>
+                </div>
+
+                <div class="specBox">
+                    <p style="color:#aaa;">Fuel Type</p>
+                    <h3>${vehicle.fuel}</h3>
+                </div>
+
+                <div class="specBox">
+                    <p style="color:#aaa;">Transmission</p>
+                    <h3>${vehicle.transmission}</h3>
+                </div>
+
+                <div class="specBox">
+                    <p style="color:#aaa;">Seating Capacity</p>
+                    <h3>${vehicle.seats} Persons</h3>
+                </div>
+
+                <div class="specBox">
+                    <p style="color:#aaa;">Rental Price</p>
+                    <h3>₹${vehicle.price} / day</h3>
+                </div>
+
+            </div>
+
+            <button onclick="openBooking('${vehicle.name}',${vehicle.price})"
+            class="normalBtn" style="padding:15px 35px; margin-top:30px; font-size:17px;">
+                Book Now
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function openBooking(name, price) {
+
+    selectedVehicle = name;
+    selectedPrice = price;
+
+    document.getElementById("selectedVehicle").innerText = name;
+    document.getElementById("selectedPrice").innerText = "₹" + price + " / day";
+
+    document.getElementById("bookingWindow").style.display = "flex";
+
+}
+
+
+function closeBooking() {
+    document.getElementById("bookingWindow").style.display = "none";
+}
+
+
+function confirmBooking() {
+
+    let name = document.getElementById("customerName").value.trim();
+    let mobile = document.getElementById("customerMobile").value.trim();
+
+    if(name === "" || !/^[0-9]{10}$/.test(mobile)) {
+        alert("Please enter your name and valid 10-digit mobile number.");
+        return;
+    }
+
+    let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+    let booking = {
+        name:name,
+        mobile:mobile,
+        email:localStorage.getItem("userEmail"),
+        vehicle:selectedVehicle,
+        price:selectedPrice,
+        date:new Date().toLocaleDateString()
+    };
+
+    bookings.push(booking);
+
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+
+    closeBooking();
+
+    document.getElementById("successMessage").innerText =
+    name + ", your " + selectedVehicle + " has been successfully booked!";
+
+    document.getElementById("successWindow").style.display = "flex";
+
+}
+
+
+function finishBooking() {
+    document.getElementById("successWindow").style.display = "none";
+    showBookings();
+}
+
+
+function showBrowse() {
+
+    document.getElementById("browsePage").style.display = "block";
+    document.getElementById("detailsPage").style.display = "none";
+    document.getElementById("bookingsPage").style.display = "none";
+
+}
+
+
+function showBookings() {
+
+    document.getElementById("browsePage").style.display = "none";
+    document.getElementById("detailsPage").style.display = "none";
+    document.getElementById("bookingsPage").style.display = "block";
+
+    let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+    let list = document.getElementById("bookingList");
+
+    list.innerHTML = "";
+
+    if(bookings.length === 0) {
+        list.innerHTML = "<h3 style='color:#aaa;'>No bookings yet. Start exploring vehicles!</h3>";
+        return;
+    }
+
+    bookings.forEach(function(booking) {
+
+        let vehicle = vehicles.find(function(v) {
+            return v.name === booking.vehicle;
+        });
+
+        let image = vehicle ? vehicle.image : "";
+
+        list.innerHTML += `
+
+        <div style="background:#1b252b; padding:20px; border-radius:8px;">
+
+            <img src="${image}" width="100%" height="160" style="object-fit:contain; background:#243139;">
+
+            <h2>${booking.vehicle}</h2>
+
+            <p style="color:#f7c62f;">₹${booking.price} / day</p>
+
+            <p>Customer: ${booking.name}</p>
+
+            <p>Mobile: ${booking.mobile}</p>
+
+            <p style="color:#aaa;">Booking Date: ${booking.date}</p>
+
+            <p style="color:#7cda8b;">✓ Successfully Booked</p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+if(localStorage.getItem("userEmail")) {
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+
+    displayVehicles();
+
+}
+
+</script>
+
+
+<style>
+
+.normalBtn {
+    background:#f7c62f;
+    color:black;
+    padding:11px 20px;
+    border:0;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.normalBtn:hover {
+    background:white;
+}
+
+.filterBtn {
+    padding:12px 18px;
+    margin:4px;
+    border-radius:20px;
+    border:0;
+    background:#f7c62f;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.filterBtn:hover {
+    background:white;
+}
+
+.specBox {
+    background:#12191e;
+    padding:15px;
+    border-radius:8px;
+}
+
+@media(max-width:900px) {
+    #vehicleList {
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+}
+
+@media(max-width:550px) {
+    #vehicleList {
+        grid-template-columns:1fr !important;
+    }
+}
+
+</style>
+
+</body>
+</html>
